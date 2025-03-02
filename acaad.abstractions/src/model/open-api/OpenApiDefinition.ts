@@ -6,11 +6,14 @@ import { OperationObject } from './OperationObject';
 import { AcaadHost } from '../connection';
 
 export const OpenApiDefinitionSchema = Schema.Struct({
+  openapi: Schema.String,
   info: InfoObjectSchema,
   paths: Schema.Record({
     key: Schema.String,
     value: PathItemObjectSchema
-  })
+  }),
+  components: Schema.Any,
+  tags: Schema.Any
 });
 
 export interface SchemaDefinition extends Schema.Schema.Type<typeof OpenApiDefinitionSchema> {}
@@ -31,7 +34,7 @@ export class OpenApiDefinition implements OpenApiDef {
 
   public static fromSchema(schema: SchemaDefinition): OpenApiDefinition {
     return new OpenApiDefinition(
-      schema.info,
+      InfoObject.fromSchema(schema.info),
       Object.entries(schema.paths).map(([key, value]) => PathItemObject.fromSchema(key, value))
     );
   }

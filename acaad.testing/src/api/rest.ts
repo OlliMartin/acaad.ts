@@ -5,7 +5,13 @@ import { openApiRoutes } from '@mocks-server/plugin-openapi';
 import openApi from './routes/open-api';
 import collectionFactory from './collections';
 import { getNextPortAsync, getRandomInt, getTestLogger, LogFunc } from '../utility';
-import { IComponentConfiguration, IMockedComponentModel, IPortConfiguration } from './types';
+import {
+  IComponentConfiguration,
+  IMockedComponentModel,
+  IPortConfiguration,
+  MockedComponentDescriptor,
+  MockedSwitchComponentDescriptor
+} from './types';
 import { ComponentDescriptor, ComponentType, TraceInfo, ApplicationState } from '@acaad/abstractions';
 
 export class TrackedRequest {
@@ -39,7 +45,7 @@ export class TrackedRequest {
 }
 
 export interface IAcaadApiServer extends IAcaadServer {
-  getRandomComponent(type: ComponentType): ComponentDescriptor;
+  getRandomComponent(type: ComponentType): MockedComponentDescriptor;
 
   enableRequestTracking(): void;
   getTrackedRequests(traceId?: string, spanId?: string): TrackedRequest[];
@@ -136,7 +142,7 @@ export class AcaadApiServer implements IAcaadApiServer {
         (_, idx) => new ComponentDescriptor(`${prefix}button-${idx}`)
       ),
       switches: Array.from({ length: componentConfiguration.switchCount ?? 0 }).map(
-        (_, idx) => new ComponentDescriptor(`${prefix}switch-${idx}`)
+        (_, idx) => new MockedSwitchComponentDescriptor(`${prefix}switch-${idx}`)
       )
     };
   }

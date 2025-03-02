@@ -1,8 +1,11 @@
-import { ComponentDescriptor } from '@acaad/abstractions';
+import { Component, ComponentDescriptor } from '@acaad/abstractions';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface IAcaadServer {
   startAsync(): Promise<void>;
+
   disposeAsync(): Promise<void>;
+
   port: number;
 }
 
@@ -20,8 +23,25 @@ export interface IComponentConfiguration {
   suppressComponentEndpoints?: boolean;
 }
 
+export interface MockedComponentDescriptor extends ComponentDescriptor {
+  onIff?: unknown;
+}
+
+export class MockedSwitchComponentDescriptor
+  extends ComponentDescriptor
+  implements MockedComponentDescriptor
+{
+  onIff?: unknown;
+
+  constructor(name: string) {
+    super(name);
+
+    this.onIff = uuidv4();
+  }
+}
+
 export interface IMockedComponentModel {
-  sensors?: ComponentDescriptor[];
-  buttons?: ComponentDescriptor[];
-  switches?: ComponentDescriptor[];
+  sensors?: MockedComponentDescriptor[];
+  buttons?: MockedComponentDescriptor[];
+  switches?: MockedComponentDescriptor[];
 }

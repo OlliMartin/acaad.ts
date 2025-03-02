@@ -9,6 +9,6 @@ export {
   AcaadHostMapping
 } from './OpenApiDefinition';
 
-export { InfoObjectSchema, InfoObject } from './InfoObject';
+export { InfoObjectSchema, InfoObjectDefinition, InfoObject } from './InfoObject';
 export { OperationObjectSchema, OperationObject } from './OperationObject';
 export { PathItemObjectSchema, PathItemObject } from './PathItemObject';

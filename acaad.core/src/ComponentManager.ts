@@ -462,7 +462,11 @@ export class ComponentManager {
         const cd = this._serviceAdapter.getComponentDescriptorByComponent(component.value);
 
         yield* executeCsAdapter(this._serviceAdapter, 'updateComponentStateAsync', (ad, as) =>
-          ad.updateComponentStateAsync(cd, event.outcome, as)
+          ad.updateComponentStateAsync(
+            cd,
+            { originalOutcome: event.outcome, determinedTargetState: Option.none<unknown>() },
+            as
+          )
         ).pipe(Effect.withSpan('acaad:cs:updateComponentState'));
       } else {
         this._logger.logWarning(

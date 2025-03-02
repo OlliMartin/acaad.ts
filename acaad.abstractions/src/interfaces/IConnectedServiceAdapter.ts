@@ -11,6 +11,7 @@ import {
 import { Option } from 'effect/Option';
 import { AcaadError } from '../errors';
 import { Duration } from 'effect';
+import { InboundStateUpdate } from '../model/InboundStateUpdate';
 
 export type ChangeType = 'action' | 'query';
 
@@ -45,7 +46,11 @@ export interface IConnectedServiceAdapterFunctional {
 
   registerStateChangeCallbackAsync(cb: OutboundStateChangeCallback, as: AbortSignal): Promise<void>;
 
-  updateComponentStateAsync(cd: ComponentDescriptor, obj: unknown, as: AbortSignal): Promise<void>;
+  updateComponentStateAsync(
+    cd: ComponentDescriptor,
+    inboundStateUpdate: InboundStateUpdate,
+    as: AbortSignal
+  ): Promise<void>;
 
   getConnectedServersAsync(as: AbortSignal): Promise<AcaadHost[]>;
 

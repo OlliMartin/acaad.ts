@@ -1,4 +1,5 @@
 {
   "extends": "../node_modules/@acaad/toolchain/config/jest.coverage.config.json",
-  "setupFiles": []
+  "setupFiles": [],
+  "coveragePathIgnorePatterns": ["/tests/contracts/.*"]
 }

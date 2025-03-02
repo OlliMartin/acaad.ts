@@ -1,15 +1,23 @@
-import { IComponentConfiguration, IMockedComponentModel } from '../types';
-import { ComponentDescriptor, InfoObject as AcaadInfoObjectAbstr, ComponentType } from '@acaad/abstractions';
+import { IComponentConfiguration, IMockedComponentModel, MockedComponentDescriptor } from '../types';
+import {
+  ComponentDescriptor,
+  InfoObjectDefinition as AcaadInfoObjectAbstr,
+  ComponentType
+} from '@acaad/abstractions';
 import { getTestLogger } from '../../utility';
 import { OpenAPIV3 } from 'openapi-types';
 
 import Document = OpenAPIV3.Document;
 import PathsObject = OpenAPIV3.PathsObject;
 import PathItemObject = OpenAPIV3.PathItemObject;
+import { InfoObjectDefinition } from '@acaad/abstractions/src/model/open-api/InfoObject';
 
 type AcaadDocument = Document & { info: AcaadInfoObjectAbstr };
 
-const defaultResponses = {
+const defaultEndpointProps = {
+  tags: [],
+  summary: 'Mock Summary',
+  description: 'Mock Description',
   responses: {
     200: {
       'application/json': {
@@ -51,10 +59,13 @@ const defaultResponses = {
 };
 
 function getSensorComponent(cd: ComponentDescriptor): PathItemObject {
+  const path = `/components/${cd.toIdentifier()}`;
+
   return {
-    [`/components/${cd.toIdentifier()}`]: {
+    [path]: {
       get: {
-        ...defaultResponses,
+        ...defaultEndpointProps,
+        operationId: path,
         acaad: {
           component: {
             name: `${cd.toIdentifier()}`,
@@ -68,10 +79,13 @@ function getSensorComponent(cd: ComponentDescriptor): PathItemObject {
 }
 
 function getButtonComponent(cd: ComponentDescriptor): PathItemObject {
+  const path = `/components/${cd.toIdentifier()}`;
+
   return {
-    [`/components/${cd.toIdentifier()}`]: {
+    [path]: {
       post: {
-        ...defaultResponses,
+        ...defaultEndpointProps,
+        operationId: path,
         acaad: {
           component: {
             name: `${cd.toIdentifier()}`,
@@ -84,44 +98,49 @@ function getButtonComponent(cd: ComponentDescriptor): PathItemObject {
   };
 }
 
-function getSwitchComponent(cd: ComponentDescriptor): PathItemObject {
+function getSwitchComponent(cd: MockedComponentDescriptor): PathItemObject {
+  const path = `/components/${cd.toIdentifier()}`;
+
   return {
-    [`/components/${cd.toIdentifier()}`]: {
+    [path]: {
       get: {
-        ...defaultResponses,
+        ...defaultEndpointProps,
+        operationId: path,
         acaad: {
           component: {
             name: `${cd.toIdentifier()}`,
             type: 'switch'
           },
-          onIff: true,
+          onIff: cd.onIff ?? true,
           queryable: true
         }
       }
     },
-    [`/components/${cd.toIdentifier()}/on`]: {
+    [`${path}/on`]: {
       post: {
-        ...defaultResponses,
+        ...defaultEndpointProps,
+        operationId: `${path}/on`,
         acaad: {
           component: {
             name: `${cd.toIdentifier()}`,
             type: 'switch'
           },
-          onIff: true,
+          onIff: cd.onIff ?? true,
           actionable: true,
           forValue: true
         }
       }
     },
-    [`/components/${cd.toIdentifier()}/off`]: {
+    [`${path}/off`]: {
       post: {
-        ...defaultResponses,
+        ...defaultEndpointProps,
+        operationId: `${path}/off`,
         acaad: {
           component: {
             name: `${cd.toIdentifier()}`,
             type: 'switch'
           },
-          onIff: true,
+          onIff: cd.onIff ?? true,
           actionable: true,
           forValue: false
         }
@@ -135,8 +154,14 @@ function getOpenApiWrapper(pathObj: PathsObject<string, PathItemObject>): AcaadD
     openapi: '3.0.0',
     info: {
       title: 'OpenAPI',
+      description: '[MOCK] API for discovering and interacting with Components.',
       version: '1.0.0',
-      acaad: 'commit-hash'
+      acaad: 'commit-hash',
+      'acaad.metadata': {
+        name: 'mock.acaad',
+        os: 'windows',
+        otlpEnabled: false
+      }
     },
     paths: pathObj
   };

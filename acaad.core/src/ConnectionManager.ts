@@ -14,7 +14,8 @@ import {
   OpenApiDefinition,
   OpenApiDefinitionSchema,
   ResponseSchemaError,
-  ResponseStatusCodeError
+  ResponseStatusCodeError,
+  OpenApiDefinitionFactory
 } from '@acaad/abstractions';
 
 import { inject, injectable } from 'tsyringe';
@@ -69,30 +70,6 @@ export class ConnectionManager {
     // Logic to retrieve authentication token
     return new OAuth2Token(0, '', '', []);
   }
-
-  private static verifyResponsePayload = (
-    response: AxiosResponse<any, any>
-  ): Effect.Effect<OpenApiDefinition, AcaadError> => {
-    if (response.data) {
-      const result = Schema.decodeUnknownEither(OpenApiDefinitionSchema)(response.data, {
-        onExcessProperty: 'ignore' // So that I remember it is possible only.
-      });
-
-      return pipe(
-        result,
-        mapLeft(
-          (error) =>
-            new ResponseSchemaError(
-              'The server did not respond according to the acaad openapi extension. This is caused either by an incompatible version or another openapi json that was discovered.',
-              error
-            )
-        ),
-        map((val) => OpenApiDefinition.fromSchema(val))
-      );
-    }
-
-    return Effect.fail(new CalloutError('No or invalid data received from the server.'));
-  };
 
   public getTraceHeaders(): Effect.Effect<TraceHeaders> {
     return Effect.gen(this, function* () {
@@ -160,7 +137,7 @@ export class ConnectionManager {
         catch: (err) => Effect.runSync(this.handleCalloutErrorEff(host, err))
       }).pipe(Effect.withSpan('acaad:sync:query:api:request-wait'));
 
-      const openApi = yield* ConnectionManager.verifyResponsePayload(res).pipe(
+      const openApi = yield* OpenApiDefinitionFactory.verifyResponsePayload(res.data).pipe(
         Effect.withSpan('acaad:sync:query:api:request-parse')
       );
 

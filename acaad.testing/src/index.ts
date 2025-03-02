@@ -7,7 +7,7 @@ import {
 } from './api';
 import { AcaadAuthentication, AcaadHost, ComponentDescriptor, ComponentType } from '@acaad/abstractions';
 import { v4 as uuidv4 } from 'uuid';
-import { IComponentConfiguration, IPortConfiguration } from './api/types';
+import { IComponentConfiguration, IPortConfiguration, MockedComponentDescriptor } from './api/types';
 
 export { IComponentConfiguration, IAcaadServer } from './api/types';
 
@@ -50,7 +50,7 @@ export class ServerMocks implements IAcaadApiServer, IAcaadSignalRServer {
     return new ServerMocks(apiServer, signalrServer);
   }
 
-  public getRandomComponent(type: ComponentType): ComponentDescriptor {
+  public getRandomComponent(type: ComponentType): MockedComponentDescriptor {
     return this.apiServer.getRandomComponent(type);
   }
 

@@ -2,7 +2,15 @@ import { AcaadMetadata, AcaadMetadataSchema } from '../AcaadMetadata';
 import { Schema } from 'effect';
 
 export const OperationObjectSchema = Schema.Struct({
-  acaad: Schema.UndefinedOr(AcaadMetadataSchema)
+  tags: Schema.Array(Schema.String),
+  summary: Schema.String,
+  acaad: Schema.UndefinedOr(AcaadMetadataSchema),
+
+  /* Unused/Unmapped */
+  responses: Schema.Object,
+  description: Schema.UndefinedOr(Schema.String),
+  operationId: Schema.UndefinedOr(Schema.String),
+  requestBody: Schema.UndefinedOr(Schema.Object)
 });
 
 export class OperationObject {

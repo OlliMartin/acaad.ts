@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@acaad/core",
+      "comment": "Move acaad openapi factory to abstractions",
+      "type": "none"
+    }
+  ],
+  "packageName": "@acaad/core"
+}

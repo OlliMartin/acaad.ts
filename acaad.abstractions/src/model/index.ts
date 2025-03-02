@@ -1,6 +1,7 @@
 /* TOP LEVEL */
 export { AcaadComponentMetadata } from './AcaadComponentMetadata';
 export { AcaadDataMetadata } from './AcaadDataMetadata';
+export { AcaadInfoMetadataSchema, AcaadInfoMetadata } from './AcaadInfoMetadata';
 export { AcaadMetadata, AcaadMetadataSchema } from './AcaadMetadata';
 export { AcaadOutcome, AcaadOutcomeSchema } from './AcaadOutcome';
 
@@ -32,7 +33,7 @@ export {
 } from './events';
 
 /* FACTORIES */
-export { EventFactory, AnyAcaadEventSchema } from './factories';
+export { EventFactory, AnyAcaadEventSchema, OpenApiDefinitionFactory } from './factories';
 
 /* OPEN API */
 export {
@@ -45,6 +46,7 @@ export {
   SchemaDefinition,
   AcaadHostMapping,
   InfoObjectSchema,
+  InfoObjectDefinition,
   InfoObject,
   OperationObjectSchema,
   OperationObject,

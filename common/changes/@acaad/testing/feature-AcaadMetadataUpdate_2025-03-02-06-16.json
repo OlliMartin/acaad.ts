@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@acaad/testing",
+      "comment": "Adjust mock api for extended acaad metadata model",
+      "type": "none"
+    }
+  ],
+  "packageName": "@acaad/testing"
+}
